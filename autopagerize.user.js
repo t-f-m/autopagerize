@@ -9,13 +9,13 @@ var scr_meta=<><![CDATA[
 // @exclude        http://b.hatena.ne.jp/*
 // @exclude        http://www.facebook.com/plugins/like.php*
 // @exclude        http://api.tweetmeme.com/button.js*
-// @version        0.0.63
+// @version        0.0.64
 // @updateURL      https://userscripts.org/scripts/source/8551.user.js
 // @icon           http://autopagerize.net/img/icons/icon_032.png
 // ==/UserScript==
 //
 // auther:  swdyh http://d.hatena.ne.jp/swdyh/
-// version: 0.0.63 2011-12-29T04:54:56+09:00
+// version: 0.0.64 2012-03-15T11:04:14+09:00
 //
 // this script based on
 // GoogleAutoPager(http://la.ma.la/blog/diary_200506231749.htm) and
@@ -40,7 +40,7 @@ else {
 }
 
 var URL = 'http://autopagerize.net/'
-var VERSION = '0.0.63'
+var VERSION = '0.0.64'
 var DEBUG = false
 var ENABLE_UPDATE = true
 var UPDATE_URL = 'https://github.com/swdyh/autopagerize/raw/master/autopagerize.user.js'
@@ -414,12 +414,14 @@ AutoPager.prototype.request = function() {
             self.error()
         },
         onload: function(res) {
-            if (res.finalUrl && location.host == res.finalUrl.split('/')[2]) {
-                self.requestLoad.apply(self, [res])
+            if (res.finalUrl) {
+                var url_s = res.finalUrl.split(/[\/\?]/)
+                if (url_s[0] == location.protocol && location.host == url_s[2]) {
+                    self.requestLoad.apply(self, [res])
+                    return
+                }
             }
-            else {
-                self.error()
-            }
+            self.error()
         }
     }
     AutoPager.requestFilters.forEach(function(i) { i(opt) }, this)
